@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="fragment-nav">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link rel="stylesheet" th:href="@{/css/nav.css}" />
+	<!-- 아이콘CDN -->
+	<script src="https://kit.fontawesome.com/3590bdbf3c.js" crossorigin="anonymous"></script>
+<style>
+
+</style>	
+	
+</head>
+
+<body>
+   <div id="sidebar" style="display:none">
+      <div id="close-button"></div>
+      <p id="menu"> &nbsp; 메뉴</p>
+      <ul class="dep1">
+        <li><a href="#"><div class="home_icon"></div><p>&nbsp; &nbsp;홈</p></a></li>
+        <li><a href="#"><div class="search_icon"></div><p>&nbsp; &nbsp;검색</p></a></li>
+        <li><a href="#"><div class="message_icon"></div><p>&nbsp; &nbsp;메시지</p></a></li>
+        <li><a href="#"><div class="notif_icon"></div><p>&nbsp; &nbsp;알림</p></a></li>
+        <li><a href="#"><div class="plus_icon"></div><p>&nbsp; &nbsp;만들기</p></a></li>
+        <li><a href="#"><div class="settings_icon"></div><p>&nbsp; &nbsp;설정</p></a></li>
+        
+      </ul>
+    </div>
+
+<!-- JS -->
+<script type="text/javascript" th:src="@{/js/nav.js}"></script> 
+
+
+</body>
+</html>
