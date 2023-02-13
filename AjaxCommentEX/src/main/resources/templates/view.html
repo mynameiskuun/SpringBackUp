@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,10 +28,10 @@
 
 <section id="container">
  	<!-- 헤더 -->
-   	<div th:replace="/fragments/header.html :: fragment-header"></div>
+   	<div th:replace="~{/fragments/header.html :: fragment-header}"></div>
     
     <!-- 사이드메뉴바 nav-->
-    <div th:replace="/fragments/nav.html :: fragment-nav"></div>
+    <div th:replace="~{/fragments/nav.html :: fragment-nav}"></div>
 
 	<!-- 메인 -->
     <div id="main_container">
@@ -79,11 +79,12 @@
                                 </div>
                             </div>
 
-                            <div class="user_container-detail">
+                            <div class="user_container-detail" th:each="comm : ${list}" th:object="${list}">
                                 <div class="user"><img src="imgs/thumb02.jpg" alt="user"></div>
                                 <div class="comment">
-                                    <span class="user_id">in0.lee</span>너무귀엽네요 ㅎㅎㅎ맞팔해요~!
-                                    <div class="time">2시간 <span class="try_comment">답글 달기</span></div>
+                                    <span class="user_id">[[${comm.mem_id}]]</span>[[${comm.com_text}]]
+                                    <div class="time">[[${comm.com_time}]]<span class="try_comment">답글 달기</span>
+                                    <span class="try_comment"><a th:href="@{/delete(com_id=${comm.com_id})}">삭제</a></span></div>
                                     <div class="icon_wrap">
                                         <div class="more_trigger">
                                             <div class="sprite_more_icon"></div>
@@ -92,6 +93,10 @@
                                             <div class="sprite_small_heart_icon_outline"></div>
                                         </div>
                                     </div>
+                                     	<div class="commit_field" id="displ" placeholder="댓글 달기" style= "display:none;">
+                                     		<input type="hidden" value="${comm.com_id}">
+                                        	<input type="text" >
+                                        </div>
                                 </div>
                             </div>
 
@@ -194,7 +199,11 @@
                             <input type="text" id = "com_text" name="com_text" placeholder="댓글달기..">
 	
 							<button id="upload_btn"> 게시 </button>
+							<button id="select_btn"> 출력 </button>
 							
+							<div class="comment_box">
+								
+							</div>
                             <!-- <div class="upload_btn">게시</div> -->
                         </div>
                     </div>
@@ -205,8 +214,8 @@
 </section>
 
 
-<script>
-
+<script th:inline="javascript">
+		/*<![CDATA[*/
 	
 	
 	document.querySelector("#upload_btn").addEventListener("click", function() {
@@ -220,8 +229,30 @@
 		$.ajax({
 			type : "get",
 			url : "/insertComment",
+			contentType : "application/json",
 			dataType : "text",
 			data : params,
+			success : function(data) {
+				console.log("성공");
+			},
+			error : function(request,status,error) {
+				console.log("통신 실패" + "\n" + 
+				"code : " + request.status + "\n" + 
+				"message : " + request.responseText + "\n" + 
+				"error" + error
+				)
+			}
+		})
+	});
+	
+	document.querySelector("#select_btn").addEventListener("click", function() {
+		$.ajax({
+			type : "get",
+			url : "/selectAllComment",
+			contentType  : "aplication/json; charset=UTF-8",
+			dataType : "text",
+		/* 	dataType : "html",
+			data : "<div></div>", */
 			success : function(res) {
 				console.log("성공");
 			},
@@ -234,6 +265,25 @@
 			}
 		})
 	});
+	
+	/*]]>*/
+	
+	document.querySelector(".try_comment").addEventListener("click", function(){
+		var status = this.style.display;
+		console.log(status);
+	});
+	
+	/* function cssChange() {
+	var element = document.querySelector(".commit_field");
+	var status = element.style.display;
+	
+	if(status = 'none') {
+		this.style.display = 'block';
+	} else {
+		this.style.display = 'none';
+	}
+} */
+	
 	
 </script>
 </body>

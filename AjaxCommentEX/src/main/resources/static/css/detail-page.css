@@ -240,6 +240,10 @@
     margin-left: 10px;
     cursor: pointer;
 }
+.try_comment a{
+	text-decoration : none;	
+	color : black;
+}
 .scroll_section .comment .time{
     font-size: 15px;
     color:#999;
