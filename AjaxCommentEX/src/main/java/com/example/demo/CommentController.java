@@ -94,6 +94,7 @@ public String deleteComment(int com_id) {
 	} catch(Exception e) {
 		e.printStackTrace();
 	}
+	
 	return "/view :: #commBox";
 }
 
