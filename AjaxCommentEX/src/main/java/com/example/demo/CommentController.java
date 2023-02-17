@@ -40,12 +40,13 @@ public void feed() {
 }
 
 @GetMapping("/view")
-public void view(Model model) {
+public String view(Model model) {
 	
-	int post_id = 1232;
+	int post_id = 2;
 	List<CommentDto> cList = commentdao.selectAllComment(post_id);
-	List<Integer> tList = new ArrayList<>();
+	model.addAttribute("list", cList);
 	
+	return "/view";
 //	for (int i = 0 ; i<cList.size(); i++) {
 //		//tList.add(cList.get(i).getCom_time());
 //		int a = commentdao.calculateCommentTime(cList.get(i).getCom_id());
@@ -66,25 +67,44 @@ public String insertComment(Model model, @RequestParam Map<String, Object> resul
 	commDto.setMem_id(resultMap.get("mem_id").toString());
 	commDto.setPost_id(Integer.parseInt((String)(resultMap.get("post_id"))));
 	commDto.setCom_text(resultMap.get("com_text").toString());
+	commentdao.insertComment(commDto);
+	
+	/*
+	 * model.addAttribute("list",
+	 * commentdao.selectAllComment(commDto.getPost_id()));
+	 * commentdao.insertComment(commDto);
+	 */
+	
+	return "/view :: #commBox";
+}
+
+@PostMapping("/insertSubComment")
+public String insertSubComment(Model model, @RequestParam Map<String, Object> resultMap) {
+	
+	CommentDto commDto = new CommentDto();
+	
+	commDto.setMem_id(resultMap.get("mem_id").toString());
+	commDto.setPost_id(Integer.parseInt((String)(resultMap.get("post_id"))));
+	commDto.setCom_text(resultMap.get("com_text").toString());
 	
 	model.addAttribute("list", commentdao.selectAllComment(commDto.getPost_id()));
 	commentdao.insertComment(commDto);
-	return "/view :: #commBox";
+	return "/view :: #commBox"; 
 }
   
 @GetMapping("/selectAllComment")
-public String selectAllComment(Model model, int com_id) {
+public String selectAllComment(Model model, int post_id) {
 	
 	System.out.println("selectCommentTest");
-	//List<CommentDto> cList = commentdao.selectAllComment(post_id);
-	//model.addAttribute("list", cList);
+	List<CommentDto> cList = commentdao.selectAllComment(post_id);
+	model.addAttribute("list", cList);
 	//int day = commentdao.calculateCommentTime(com_id);
 	//model.addAttribute("day", day);
 	
-	return "/view";
+	return "redirect:/view";
 }
 
-@PostMapping("/deleteComment")
+@GetMapping("/deleteComment")
 public String deleteComment(int com_id) {
 	
 	System.out.println("com_id : " + com_id);
@@ -95,16 +115,7 @@ public String deleteComment(int com_id) {
 		e.printStackTrace();
 	}
 	
-	return "/view :: #commBox";
-}
-
-@GetMapping("/asd")
-public String selectAllPost(Model model) {
-	
-	 List<PostDTO> pList = commentdao.selectAllPost(); model.addAttribute("post",
-	 pList);
-	 
-	return "my_home";
+	return "redirect:/view";
 }
 
 @ResponseBody
@@ -114,6 +125,8 @@ public String test1() {
 	String content = "";
 	return "테스트용 메소드";
 }
+
+
 /*
  * @GetMapping("/calculateCommentTime") public String calculateCommentTime(Model
  * model, int com_id) {

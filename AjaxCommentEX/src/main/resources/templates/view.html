@@ -69,8 +69,8 @@
 						
 						
 						
-                        <section class="scroll_section" id="commBox">
-                     
+                        <section class="scroll_section" >
+                        
                             <div class="admin_container">
                                 <div class="admin"><img src="imgs/thumb.jpeg" alt="user"></div>
                                 <div class="comment">
@@ -79,16 +79,33 @@
                                 </div>
                             </div>
                             
-							 	<div class="user_container-detail" th:each="comm : ${list}">
+                          	<div id="commBox">
+							 	<div class="user_container-detail" th:each="comm,i : ${list}" >
 	                                <div class="user"><img src="imgs/thumb02.jpg" alt="user"></div>
 	                               		 <div class="comment">
 		                                    <span class="user_id">[[${comm.mem_id}]]</span>[[${comm.com_text}]]
 		                                    <input type="hidden" th:value="${comm.mem_id}">
 		                                    <input type="hidden" id="com_id" th:value="${comm.com_id}">
-		                                    <div class="time">일전<span class="try_comment" id="subCommentButton" >답글 달기</span>
-			                                    <span class="try_comment"><a onclick="deleteComment()">삭제</a>
-			                                    </span>
-			                                    <span class="modify_comment"><a>수정</a>
+		                                    <div class="time">일전
+		                                    
+												
+										<div id="subComBox">
+											<span th:value="${#ids.next('list')}" id ="subComBtn" onclick="subCom()"> 답글 달기 </span>
+											
+											
+											<div> <a th:href="@{/deleteComment(com_id=${comm.com_id})}">삭제</a></div>
+											
+											<div th:for="${#ids.next('list')}" style="display:none;">
+												<input type="hidden" th:field="${list}" th:value="${comm.com_id}">
+												<input type="hidden" id="com_id" name="com_id" value="${comm.com_id}">
+												<input type="text" id = "subCom_text" placeholder="대댓글 달기">
+												<label th:text="작성" onclick="subCommInsert()"></label>
+											</div>	
+										</div>	
+		                                  	 
+			                                    
+			                                    <span class="modify_comment">
+			                                    <a>수정</a>
 			                                    </span>
 		                                    </div>
 		                                    <div class="icon_wrap">
@@ -99,12 +116,13 @@
 		                                            <div class="sprite_small_heart_icon_outline"></div>
 		                                        </div>
 		                                    </div>
-		                                     	<div class="subCommentBox" id="subCommentBox" placeholder="댓글 달기" style= "display:none;">
-		                                        	<input type="text" >
-	                                        </div>
+	                                        	<div class="subCommentArea" id="subCommentArea" style="display:none";>
+	                                        		
+	                                        	</div>
+	                             
 		                                </div>
 	                            </div> 
-                            
+	                           </div>
                         </section>
                         
                         
@@ -202,7 +220,8 @@
 				type : "POST",
 				data : params
 			}).done(function (fragment) {
-				 $("#commBox").replaceWith(fragment);
+				$('#com_text').val("")
+				 $("#commBox").append(fragment);
 			})
 		}
 		
@@ -285,7 +304,7 @@
 		    type: "POST",
 		    success : function(data){
 		      //alert(data)
-		     $(".comment_box").replaceWith(data)
+		     $(".comment_box").append(data)
 		    },
 		    error : function(){
 		      alert("에러")		
@@ -294,10 +313,12 @@
 		}
 	
 	let commentBtn = document.getElementById("subCommentButton");
-	let status = document.getElementById("subCommentBox");
+	let status = document.getElementById("asdasd");
 	
 	commentBtn.addEventListener("click", function() {
 		console.log(status);
+		console.log(this.id);
+		console.log(this.class);
 		
 		if(status.style.display == "none") {
 			status.style.display = "block";
@@ -306,7 +327,38 @@
 		}
 	});
 	
+	function subCom() {
+		
+		const a = document.getElementById("subComBtn")
+		console.log(a);
+		const b = document.getElementById("subComBtn").nextSibling.nextSibling;
+		console.log(b);
+		const c = this.nextSibiling;
+		console.log(c);
+		
+		if(b.style.display == "none") {
+			b.style.display = "block";
+		} else if(b.style.display == "block") {
+			b.style.display = "none"
+		}
+	}
 	
+	function subCommInsert() {
+		var params = {
+				mem_id : $("#mem_id").val(),
+				com_id : $("#com_id").val(),
+				com_text : $('#com_text').val()
+			};
+		
+		$.ajax({
+			url : "/insertComment",
+			type : "POST",
+			data : params
+		}).done(function (fragment) {
+			$('#com_text').val("")
+			 $("#commBox").replaceWith(fragment);
+		})
+	}
 	/* 
 		해결해야 할 문제
 		1. 댓글 답글달기 누르면 해당 댓글의 input text창 보이게
@@ -321,6 +373,11 @@
 		6. my_home -> view 로 이어지는 값 넘기기 성공.
 			각 게시글 번호에 따라서 각 게시글에 댓글 출력되게 구현 완료.
 			
+			
+			
+		- 좋아요
+		1. 누르면 인서트, 빨간 하트로 시간차 줘서 바뀌게
+		2. 
 	*/
 	
 </script>
