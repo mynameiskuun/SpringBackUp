@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.asd.CommentDao;
+import com.example.demo.CommentDto;
+import com.example.demo.MemberDto;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -78,30 +81,41 @@ public String insertComment(Model model, @RequestParam Map<String, Object> resul
 	return "/view :: #commBox";
 }
 
-@PostMapping("/insertSubComment")
-public String insertSubComment(Model model, @RequestParam Map<String, Object> resultMap) {
-	
-	CommentDto commDto = new CommentDto();
-	
-	commDto.setMem_id(resultMap.get("mem_id").toString());
-	commDto.setPost_id(Integer.parseInt((String)(resultMap.get("post_id"))));
-	commDto.setCom_text(resultMap.get("com_text").toString());
-	
-	model.addAttribute("list", commentdao.selectAllComment(commDto.getPost_id()));
-	commentdao.insertComment(commDto);
-	return "/view :: #commBox"; 
-}
+//대댓글 인서트 메소드
+
+	 @PostMapping("/insertSubComment") 
+	 public String insertSubComment(Model model, @RequestParam Map<String, Object> resultMap, HttpSession session) {
+	 
+		 SubCommentDto subCommDto = new SubCommentDto();
+	 
+//	 MemberDto ses_user = (MemberDto) session.getAttribute("user");
+//	 String loginUserId = ses_user.getMem_id();
+//	 
+//	 if(loginUserId != null) {
+//		 commDto.setMem_id(loginUserId);
+//	 } else {
+//		 commDto.setMem_id(resultMap.get("mem_id").toString());
+//	 }
+	 
+		 subCommDto.setMem_id("testID");
+		 subCommDto.setCom_id(Integer.parseInt((String)(resultMap.get("com_id"))));
+		 subCommDto.setSubcom_text(resultMap.get("subcom_text").toString());
+	 
+	 //model.addAttribute("list", commentdao.selectAllComment(subCommDto.getPost_id()));
+	 commentdao.insertSubComment(subCommDto); 
+	 
+	 return "/view :: #commBox"; 
+	 }
   
 @GetMapping("/selectAllComment")
 public String selectAllComment(Model model, int post_id) {
 	
-	System.out.println("selectCommentTest");
 	List<CommentDto> cList = commentdao.selectAllComment(post_id);
-	model.addAttribute("list", cList);
+	model.addAttribute("list", cList);	
 	//int day = commentdao.calculateCommentTime(com_id);
 	//model.addAttribute("day", day);
 	
-	return "redirect:/view";
+	return "/view";
 }
 
 @GetMapping("/deleteComment")
@@ -119,7 +133,7 @@ public String deleteComment(int com_id) {
 }
 
 @ResponseBody
-@PostMapping("/test") 
+@PostMapping("/ajaxTest") 
 public String test1() {
 	
 	String content = "";

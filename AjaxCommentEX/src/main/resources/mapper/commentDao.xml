@@ -10,6 +10,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into comment (mem_id, post_id, com_text) values (#{mem_id}, #{post_id}, #{com_text})
 	</insert>	
 	
+	<insert id="insertSubComment">
+		insert into subcomment (mem_id, com_id, subcom_text) values (#{mem_id}, #{com_id}, #{subcom_text})
+	</insert>
+	
 	<select id="selectAllComment" resultType="com.example.demo.CommentDto">
 		select * from comment where post_id = #{post_id}
 	</select>
