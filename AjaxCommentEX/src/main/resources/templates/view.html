@@ -116,7 +116,7 @@
 												</form>
 		                                    </div>
 		                                   
-		                                    	<div class="subComShowHere"></div>
+		                                    	<div class="subComShowHere"><!-- 대댓글 출력 --></div>
 		                                    	
 		                                    <div class="icon_wrap">
 		                                        <div class="more_trigger">
@@ -160,16 +160,16 @@
 
                         <div class="commit_field">
                         
-                        	<input type="hidden" id = "mem_id" name="mem_id" value="testmember1">
+                        <!-- th:if 로그인세션 존재하면 출력되게 -->
+                        	<input type="hidden" id = "mem_id" name="mem_id" value="testID">
                         	<input type="hidden" id = "post_id" name="post_id" value="2">
                             <input type="text" id = "com_text" name="com_text" placeholder="댓글달기..">
-	
+						
 							<button id="select_btn"> 출력 </button>
 							<button id="text_btn"> ajax테스트</button>
-							
-                            <div class="upload_btn" onclick="insertComment()">게시</div>
-                            <div class="comment_box">
-							</div>
+                            <button id="upload_btn"><a onclick="insertComment()" style="text-decoration:none">게시</a></button>
+                            
+                            <div class="CommentShowHere"></div>
                         </div>
                     </div>
                 </article>
@@ -200,8 +200,8 @@
 	// 댓글 인서트 메소드
 	function insertComment() {
 			var params = {
-					"post_id" : $("#post_id").val(),
-					"com_text" : $('#com_text').val()
+					post_id : $("#post_id").val(),
+					com_text : $('#com_text').val()
 				};
 			
 			$.ajax({
@@ -321,6 +321,7 @@
 			절반 성공. 값 넘기면 해결 될수도?
 			거의 성공. 메인에서 상세로 넘어갈때 게시글 번호 넘겨서 
 		5. 로그인 세션값이 존재하면 댓글 창 출력되게
+		6. 대댓글 출력 area
 			
 			
 		- 좋아요

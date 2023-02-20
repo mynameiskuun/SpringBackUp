@@ -67,7 +67,7 @@ public String insertComment(Model model, @RequestParam Map<String, Object> resul
 	
 	CommentDto commDto = new CommentDto();
 	
-	commDto.setMem_id(resultMap.get("mem_id").toString());
+	commDto.setMem_id("asd");
 	commDto.setPost_id(Integer.parseInt((String)(resultMap.get("post_id"))));
 	commDto.setCom_text(resultMap.get("com_text").toString());
 	commentdao.insertComment(commDto);
